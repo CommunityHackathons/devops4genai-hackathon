@@ -3,7 +3,6 @@ import { ArrowRight, CalendarDays, ChevronDown, MapPin, Sparkles } from "lucide-
 import { useState } from "react";
 
 const EVENTBRITE_URL = "https://www.eventbrite.ca/e/aws-leadership-community-day-tickets-2003704713737?aff=oddtdtcreator&keep_tld=true";
-const COMMUNITY_DAY_URL = "https://awscommunityday.ca/";
 
 const events = [
   {
@@ -39,8 +38,7 @@ const events = [
     title: "AWS Community Day with Hackathon Day",
     location: "Ottawa, Ontario, Canada",
     type: "Hackathon",
-    href: COMMUNITY_DAY_URL,
-    status: "Visit Community Day",
+    status: "Details coming soon",
   },
 ];
 
