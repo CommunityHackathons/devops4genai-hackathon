@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, ArrowRight, Code2, Users, Trophy, Rocket, Sparkles, Bot, Eye, Camera, BookOpen, CalendarDays, Presentation, Building2, Lightbulb, Handshake, ChevronDown } from "lucide-react";
+import { MapPin, ArrowRight, Code2, Users, Trophy, Rocket, Sparkles, Bot, Eye, Camera, BookOpen, CalendarDays, Presentation, Building2, Lightbulb, Handshake, ChevronDown } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import headshotGarima from "@/assets/headshots/Garima_bajpai.png";
 import headshotJohn from "@/assets/headshots/John_Willis_Image20260606195016.png";
@@ -356,32 +356,6 @@ const Index = () => {
             </div>
           </div>
           <HeroCarousel />
-        </div>
-      </section>
-
-      {/* UPCOMING EVENTS */}
-      <section id="next-event" className="bg-primary py-12 text-white">
-        <div data-reveal className="reveal container mx-auto px-6">
-          <p className="font-mono text-xs uppercase tracking-widest text-white/75">Save the dates</p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Upcoming community events.</h2>
-          <div className="mt-8 grid divide-y divide-white/20 border-y border-white/20 md:grid-cols-3 md:divide-x md:divide-y-0">
-            {UPCOMING_EVENTS.map(({ date, title, detail, href }) => {
-              const content = <>
-                <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-white/75"><Calendar className="h-4 w-4 text-accent" /> {date}</span>
-                <h3 className="mt-4 text-xl font-bold leading-snug">{title}</h3>
-                {detail && <p className="mt-2 text-sm text-white/75">{detail}</p>}
-                {href && <span className="registration-open-chip mt-4">Registration open</span>}
-                {href && <span className="mt-3 inline-flex items-center text-sm font-semibold text-accent">Reserve your place <ArrowRight className="ml-2 h-4 w-4" /></span>}
-              </>;
-              return href ? (
-                <a key={date} href={href} target="_blank" rel="noopener noreferrer" className="registration-event-card group block py-6 transition-colors hover:bg-white/10 md:px-7 md:first:pl-0 md:last:pr-0">
-                  {content}
-                </a>
-              ) : (
-                <div key={date} className="py-6 md:px-7 md:first:pl-0 md:last:pr-0">{content}</div>
-              );
-            })}
-          </div>
         </div>
       </section>
 
