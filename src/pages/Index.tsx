@@ -27,8 +27,24 @@ const galleryImages = Object.values(
 ) as string[];
 
 const VENUE = "Invest Ottawa, 7 Bayview Rd, Ottawa, ON";
-const NEXT_EVENT_DATE = "August 20–21, 2027";
 const HACKATHON_THEMES_URL = "https://docs.google.com/document/d/1aq3uyKG3NAl9gHVTT86XYjolHzh01HvSt28aCSTdbk0/edit?tab=t.0";
+const UPCOMING_EVENTS = [
+  {
+    date: "November 22, 2026",
+    title: "AWS Leadership Community Day",
+    href: "https://www.eventbrite.ca/e/aws-leadership-community-day-tickets-2003704713737?aff=oddtdtcreator&keep_tld=true",
+  },
+  {
+    date: "March 6, 2027",
+    title: "Women AWS Summit",
+    detail: "North America - Eastern Canada Edition",
+  },
+  {
+    date: "August 20-21, 2027",
+    title: "AWS Community Day with Hackathon Day",
+    detail: "Ottawa, Canada",
+  },
+];
 
 const NAV_GROUPS = [
   {
@@ -60,10 +76,93 @@ const NAV_GROUPS = [
     items: [
       ["Founders", "#founders"],
       ["Sponsors", "#sponsors"],
-      ["Ottawa 2027", "#next-event"],
+      ["Ottawa 2027", "/events"],
     ],
   },
 ];
+
+const REGISTRATION_URL = "https://www.eventbrite.ca/e/aws-leadership-community-day-tickets-2003704713737?aff=oddtdtcreator&keep_tld=true";
+
+const HERO_SLIDES = [
+  {
+    image: heroCommunity,
+    label: "Community in motion",
+    copy: "Build alongside developers, mentors, students, and technology leaders.",
+  },
+  {
+    image: galleryImages[4],
+    label: "Real work, shared openly",
+    copy: "Turn a useful idea into something you can demo, discuss, and develop further.",
+  },
+  {
+    image: galleryImages[14],
+    label: "The right people in one room",
+    copy: "Meet collaborators and practitioners who can move an idea forward.",
+  },
+];
+
+const RegistrationTicker = () => (
+  <div className="registration-ticker border-t border-border">
+    <a href={REGISTRATION_URL} target="_blank" rel="noopener noreferrer" className="registration-ticker-link" aria-label="Registration is open for AWS Leadership Community Day on November 22, 2026. Reserve your place.">
+      <span className="registration-ticker-label">Registration open</span>
+      <span className="registration-ticker-viewport" aria-hidden="true">
+        <span className="registration-ticker-track">
+          {[0, 1].map((repeat) => (
+            <span key={repeat} className="registration-ticker-message">
+              <span>AWS Leadership Community Day</span>
+              <span>November 22, 2026</span>
+              <span>Ottawa</span>
+              <span className="registration-ticker-action">Reserve your place <ArrowRight className="h-3.5 w-3.5" /></span>
+            </span>
+          ))}
+        </span>
+      </span>
+    </a>
+  </div>
+);
+
+const HeroCarousel = () => {
+  const [current, setCurrent] = useState(0);
+  const total = HERO_SLIDES.length;
+
+  const next = useCallback(() => setCurrent((slide) => (slide + 1) % total), [total]);
+  const previous = useCallback(() => setCurrent((slide) => (slide - 1 + total) % total), [total]);
+
+  useEffect(() => {
+    const timer = setInterval(next, 5600);
+    return () => clearInterval(timer);
+  }, [next]);
+
+  return (
+    <div className="hero-visual relative min-h-[380px] overflow-hidden rounded-lg md:min-h-[560px]">
+      {HERO_SLIDES.map((slide, index) => (
+        <img
+          key={slide.label}
+          src={slide.image}
+          alt={slide.copy}
+          className={`hero-carousel-image absolute inset-0 h-full w-full object-cover ${index === current ? "is-active" : ""}`}
+        />
+      ))}
+      <div className="absolute inset-x-0 bottom-0 bg-background/90 p-5 text-white">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest text-accent">{HERO_SLIDES[current].label}</p>
+            <p className="mt-2 max-w-md text-sm text-white/80">{HERO_SLIDES[current].copy}</p>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <button type="button" onClick={previous} className="hero-carousel-control" aria-label="Previous hero image"><ArrowRight className="h-4 w-4 rotate-180" /></button>
+            <button type="button" onClick={next} className="hero-carousel-control" aria-label="Next hero image"><ArrowRight className="h-4 w-4" /></button>
+          </div>
+        </div>
+        <div className="mt-4 flex gap-1.5" aria-label="Hero image carousel">
+          {HERO_SLIDES.map((slide, index) => (
+            <button key={slide.label} type="button" onClick={() => setCurrent(index)} className={`hero-carousel-dot ${index === current ? "is-active" : ""}`} aria-label={`Show ${slide.label}`} aria-current={index === current ? "true" : undefined} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const GalleryCarousel = () => {
   const [current, setCurrent] = useState(0);
@@ -172,7 +271,9 @@ const Index = () => {
             <span className="flex h-8 w-8 items-center justify-center rounded bg-gradient-primary text-primary-foreground">CH</span>
             <span>Community Hackathon</span>
           </a>
-          <div className="ml-10 hidden flex-1 items-center gap-2 lg:flex">
+          <div className="ml-8 hidden flex-1 items-center gap-2 lg:flex">
+            <a href="/" aria-current="page" className="rounded bg-secondary px-3 py-2 text-sm font-medium text-accent">Home</a>
+            <a href="/events" className="rounded px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-accent">Events</a>
             {NAV_GROUPS.map((group) => (
               <div key={group.label} className="relative">
                 <button
@@ -199,14 +300,13 @@ const Index = () => {
           </div>
           <div className="ml-auto flex items-center gap-2">
             <a href="#sponsors" className="hidden px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-accent xl:inline">For Partners</a>
-            <Button asChild size="sm" className="hidden rounded border-0 bg-primary text-white hover:bg-primary/90 sm:inline-flex">
-              <a href="#next-event">Attend 2027</a>
-            </Button>
           </div>
         </nav>
         <div className="border-t border-border bg-card/95 lg:hidden">
           <div className="horizontal-nav container mx-auto flex items-center gap-1 overflow-x-auto px-4 py-2">
+            <a href="/" aria-current="page" className="shrink-0 rounded bg-secondary px-3 py-2 font-mono text-xs font-semibold text-accent">Home</a>
             {[
+              ["Events", "/events"],
               ["Build", "#participate"],
               ["Challenges", "#challenges"],
               ["Organize", "#organize"],
@@ -220,49 +320,67 @@ const Index = () => {
             ))}
           </div>
         </div>
+        <RegistrationTicker />
       </header>
 
       {/* HERO */}
-      <section id="top" className="bg-background pt-28 text-foreground lg:pt-16">
-        <div className="container mx-auto grid min-h-[calc(100vh-7rem)] items-center gap-10 px-6 py-12 md:grid-cols-[1.05fr_.95fr] md:py-16 lg:min-h-[calc(100vh-4rem)]">
+      <section id="top" className="bg-background pt-40 text-foreground lg:pt-28">
+        <div className="container mx-auto grid min-h-[calc(100vh-10rem)] items-center gap-10 px-6 py-12 md:grid-cols-[1.05fr_.95fr] md:py-16 lg:min-h-[calc(100vh-7rem)]">
           <div className="hero-sequence py-6">
             <p className="mb-6 font-mono text-xs font-semibold uppercase tracking-widest text-accent">Built in Ottawa. Open to everyone.</p>
             <h1 className="max-w-3xl font-mono text-5xl font-bold leading-[1.05] text-white sm:text-6xl lg:text-7xl">Community Hackathon</h1>
-            <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">A home for people who learn by building. Join a team, solve an open challenge, share your work, or bring a hackathon to your community.</p>
+            <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">Spend a day making real progress: meet people who share your curiosity, learn directly from practitioners, and leave with an idea you can keep building.</p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="h-12 rounded border-0 bg-primary px-6 text-white hover:bg-primary/90">
-                <a href="#participate">Participate <ArrowRight className="ml-2 h-4 w-4" /></a>
+              <Button asChild size="lg" className="upcoming-events-cta h-12 w-[260px] max-w-full rounded border-0 bg-accent px-4 text-accent-foreground hover:bg-accent/90">
+                <a href="/events" aria-label="Upcoming Events">
+                  <span className="events-roll-viewport" aria-hidden="true">
+                    <span className="events-roll-track">
+                      <span className="events-roll-card">Upcoming Events</span>
+                      <span className="events-roll-card">Nov 22: Leadership Day</span>
+                      <span className="events-roll-card">Mar 6: Women AWS Summit</span>
+                      <span className="events-roll-card">Aug 20-21: Hackathon Day</span>
+                      <span className="events-roll-card">Upcoming Events</span>
+                    </span>
+                  </span>
+                  <ArrowRight className="ml-2 h-4 w-4 shrink-0" />
+                </a>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-12 rounded border-border bg-card px-6 text-foreground hover:bg-secondary hover:text-white">
                 <a href="#organize">Organize a hackathon</a>
               </Button>
             </div>
             <div className="mt-12 grid max-w-xl grid-cols-3 border-y border-border py-5">
-              <div><strong className="block text-xl text-white">2 days</strong><span className="text-xs text-muted-foreground">to build together</span></div>
-              <div className="border-l border-border pl-5"><strong className="block text-xl text-white">Open</strong><span className="text-xs text-muted-foreground">to all skill levels</span></div>
-              <div className="border-l border-border pl-5"><strong className="block text-xl text-white">Ottawa</strong><span className="text-xs text-muted-foreground">community-led</span></div>
+              <div><strong className="block text-base text-white sm:text-xl">Meet collaborators</strong><span className="text-xs text-muted-foreground">who broaden your work</span></div>
+              <div className="border-l border-border pl-5"><strong className="block text-base text-white sm:text-xl">Build openly</strong><span className="text-xs text-muted-foreground">with practical feedback</span></div>
+              <div className="border-l border-border pl-5"><strong className="block text-base text-white sm:text-xl">Keep momentum</strong><span className="text-xs text-muted-foreground">after the event ends</span></div>
             </div>
           </div>
-          <div className="hero-visual relative min-h-[380px] overflow-hidden rounded-lg md:min-h-[560px]">
-            <img src={heroCommunity} alt="Developers collaborating at a Community Hackathon event" className="hero-photo absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-x-0 bottom-0 bg-background/90 p-5 text-white">
-              <p className="font-mono text-xs uppercase tracking-widest text-accent">Community in motion</p>
-              <p className="mt-2 text-sm text-white/80">Build alongside developers, mentors, students, and technology leaders.</p>
-            </div>
-          </div>
+          <HeroCarousel />
         </div>
       </section>
 
-      {/* NEXT EVENT */}
+      {/* UPCOMING EVENTS */}
       <section id="next-event" className="bg-primary py-12 text-white">
-        <div data-reveal className="reveal container mx-auto flex flex-col justify-between gap-8 px-6 md:flex-row md:items-center">
-          <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-white/75">Next community gathering</p>
-            <h2 className="mt-3 text-3xl font-bold md:text-4xl">AWS Community Days Ottawa 2027</h2>
-          </div>
-          <div className="grid gap-3 text-sm sm:grid-cols-2">
-            <span className="flex items-center gap-2"><Calendar className="h-5 w-5 text-accent" /> {NEXT_EVENT_DATE}</span>
-            <span className="flex items-center gap-2"><MapPin className="h-5 w-5 text-accent" /> Ottawa, Canada</span>
+        <div data-reveal className="reveal container mx-auto px-6">
+          <p className="font-mono text-xs uppercase tracking-widest text-white/75">Save the dates</p>
+          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Upcoming community events.</h2>
+          <div className="mt-8 grid divide-y divide-white/20 border-y border-white/20 md:grid-cols-3 md:divide-x md:divide-y-0">
+            {UPCOMING_EVENTS.map(({ date, title, detail, href }) => {
+              const content = <>
+                <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-white/75"><Calendar className="h-4 w-4 text-accent" /> {date}</span>
+                <h3 className="mt-4 text-xl font-bold leading-snug">{title}</h3>
+                {detail && <p className="mt-2 text-sm text-white/75">{detail}</p>}
+                {href && <span className="registration-open-chip mt-4">Registration open</span>}
+                {href && <span className="mt-3 inline-flex items-center text-sm font-semibold text-accent">Reserve your place <ArrowRight className="ml-2 h-4 w-4" /></span>}
+              </>;
+              return href ? (
+                <a key={date} href={href} target="_blank" rel="noopener noreferrer" className="registration-event-card group block py-6 transition-colors hover:bg-white/10 md:px-7 md:first:pl-0 md:last:pr-0">
+                  {content}
+                </a>
+              ) : (
+                <div key={date} className="py-6 md:px-7 md:first:pl-0 md:last:pr-0">{content}</div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -275,17 +393,18 @@ const Index = () => {
             <h2 className="mt-4 text-4xl font-bold text-white md:text-5xl">Find your way into the build.</h2>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">Start with a project, take on a shared challenge, or learn alongside the community at a hackathon conference.</p>
           </div>
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <div className="mt-12 grid divide-y divide-border border-y border-border md:grid-cols-3 md:divide-x md:divide-y-0">
             {[
               { icon: Code2, title: "Build projects", desc: "Form a team, turn an idea into a working prototype, and publish what you learn.", href: "#challenges", action: "Explore challenge areas" },
               { icon: Lightbulb, title: "Open Challenge", desc: "Bring a problem that matters to you or choose a community challenge without being boxed into one track.", href: HACKATHON_THEMES_URL, action: "View challenge guide", external: true },
               { icon: Presentation, title: "Hackathon Conference", desc: "Learn from builders, attend practical sessions, meet mentors, and see project demos.", href: "#conference", action: "See the format" },
-            ].map(({ icon: Icon, title, desc, href, action, external }) => (
-              <a key={title} href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} data-reveal className="reveal community-card group flex min-h-[280px] flex-col rounded-lg border border-border bg-background p-7 transition-colors hover:border-primary">
+            ].map(({ icon: Icon, title, desc, href, action, external }, index) => (
+              <a key={title} href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} data-reveal className="reveal program-path group flex min-h-[280px] flex-col px-7 py-8 first:pl-0 md:first:pl-7">
                 <div className="motion-icon flex h-11 w-11 items-center justify-center rounded bg-primary text-white">
                   <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="mt-7 text-xl font-bold">{title}</h3>
+                <span className="mt-7 font-mono text-xs uppercase tracking-widest text-accent">0{index + 1}</span>
+                <h3 className="mt-3 text-xl font-bold">{title}</h3>
                 <p className="mt-3 flex-1 leading-relaxed text-muted-foreground">{desc}</p>
                 <span className="mt-6 inline-flex items-center text-sm font-semibold text-accent">{action}<ArrowRight className="ml-2 h-4 w-4" /></span>
               </a>
@@ -610,7 +729,7 @@ const Index = () => {
           <div className="font-mono">
             <span className="text-gradient font-bold">Community Hackathon</span> · Ottawa
           </div>
-          <div>Next gathering: {NEXT_EVENT_DATE} · Ottawa, Canada</div>
+          <div>Next: {UPCOMING_EVENTS[0].title} · {UPCOMING_EVENTS[0].date}</div>
         </div>
       </footer>
     </div>

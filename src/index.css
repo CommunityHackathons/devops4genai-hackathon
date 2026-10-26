@@ -26,7 +26,7 @@
     --border: 202 30% 21%;
     --input: 202 30% 21%;
     --ring: 196 82% 42%;
-    --radius: 0.75rem;
+    --radius: 0.4rem;
 
     --hero-overlay: linear-gradient(135deg, hsl(210 60% 4% / 0.92), hsl(200 55% 10% / 0.85));
     --gradient-primary: linear-gradient(135deg, hsl(196 82% 42%), hsl(41 91% 56%));
@@ -47,7 +47,11 @@
     @apply bg-background text-foreground;
     font-family: 'Montserrat', system-ui, sans-serif;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2, h3 {
+    font-family: 'Fira Code', monospace;
+    letter-spacing: 0;
+  }
+  h4, h5, h6 {
     font-family: 'Comfortaa', system-ui, sans-serif;
     letter-spacing: 0;
   }
@@ -94,9 +98,122 @@
 .hero-visual {
   animation: hero-enter 0.9s 140ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-.hero-photo {
-  animation: hero-drift 16s ease-in-out infinite alternate;
-  transform-origin: center;
+.registration-ticker {
+  overflow: hidden;
+  height: 2.25rem;
+  background: linear-gradient(90deg, hsl(41 91% 52%), hsl(46 96% 62%));
+  color: hsl(208 52% 6%);
+}
+.registration-ticker-link {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  text-decoration: none;
+}
+.registration-ticker-label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  padding: 0 1rem;
+  color: hsl(0 0% 100%);
+  background: hsl(196 82% 35%);
+  box-shadow: 12px 0 22px hsl(196 82% 35% / 0.76);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.registration-ticker-label::after {
+  content: "";
+  width: 0.32rem;
+  height: 0.32rem;
+  margin-left: 0.65rem;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 12px hsl(0 0% 100% / 0.95);
+}
+.registration-ticker-viewport {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+.registration-ticker-track {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  animation: registration-marquee 26s linear infinite;
+}
+.registration-ticker-link:hover .registration-ticker-track {
+  animation-play-state: paused;
+}
+.registration-ticker-message {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  min-width: max-content;
+  padding-right: 3rem;
+  color: hsl(208 52% 8%);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.registration-ticker-message > span:not(:first-child)::before {
+  content: "";
+  display: inline-block;
+  width: 0.3rem;
+  height: 0.3rem;
+  margin-right: 1.1rem;
+  border-radius: 999px;
+  background: hsl(196 82% 35%);
+  box-shadow: 0 0 10px hsl(196 82% 35% / 0.7);
+  vertical-align: middle;
+}
+.registration-ticker-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: hsl(196 82% 29%);
+  font-weight: 800;
+}
+.hero-carousel-image {
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 900ms ease, transform 6s ease;
+}
+.hero-carousel-image.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+.hero-carousel-control {
+  display: inline-flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid hsl(0 0% 100% / 0.32);
+  border-radius: 0.25rem;
+  color: hsl(0 0% 100%);
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+.hero-carousel-control:hover {
+  border-color: hsl(41 91% 56%);
+  background: hsl(41 91% 56% / 0.2);
+}
+.hero-carousel-dot {
+  height: 0.24rem;
+  width: 1.1rem;
+  border-radius: 999px;
+  background: hsl(0 0% 100% / 0.28);
+  transition: width 240ms ease, background-color 240ms ease;
+}
+.hero-carousel-dot.is-active {
+  width: 2.2rem;
+  background: hsl(41 91% 56%);
 }
 
 .reveal {
@@ -116,6 +233,24 @@
   transform: translateY(-4px);
   box-shadow: 0 18px 35px -24px hsl(196 82% 42% / 0.65);
 }
+.program-path {
+  position: relative;
+  transition: background-color 240ms ease, color 240ms ease;
+}
+.program-path::after {
+  content: "";
+  position: absolute;
+  inset: auto 1.75rem 0;
+  height: 3px;
+  background: hsl(41 91% 56%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.program-path:hover {
+  background: hsl(204 38% 15%);
+}
+.program-path:hover::after { transform: scaleX(1); }
 .community-card svg,
 a svg {
   transition: transform 0.25s ease;
@@ -159,6 +294,126 @@ a:hover span > svg {
   transform: translateX(5px);
   border-color: hsl(196 82% 42% / 0.6);
   box-shadow: -4px 0 0 hsl(41 91% 56%);
+}
+.event-directory-card {
+  transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1), border-color 240ms ease, background-color 240ms ease;
+}
+.events-display {
+  font-family: 'Montserrat', system-ui, sans-serif;
+}
+.upcoming-events-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px hsl(41 91% 56% / 0.45), 0 0 22px hsl(41 91% 56% / 0.5);
+  animation: event-cta-glow 7.5s ease-in-out infinite;
+}
+.upcoming-events-cta::after {
+  content: "";
+  position: absolute;
+  inset: -35% auto -35% -45%;
+  width: 38%;
+  background: linear-gradient(105deg, transparent, hsl(0 0% 100% / 0.7), transparent);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-220%) skewX(-18deg);
+  animation: event-cta-shine 7.5s ease-in-out infinite;
+}
+.attention-events-link {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px hsl(196 82% 58% / 0.4), 0 0 22px hsl(196 82% 58% / 0.58);
+  animation: attention-beacon 3.6s ease-in-out infinite;
+}
+.attention-events-link::after {
+  content: "";
+  position: absolute;
+  inset: -40% auto -40% -35%;
+  width: 34%;
+  background: linear-gradient(105deg, transparent, hsl(0 0% 100% / 0.62), transparent);
+  pointer-events: none;
+  transform: translateX(-220%) skewX(-18deg);
+  animation: attention-shine 3.6s ease-in-out infinite;
+}
+.registration-open-chip {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border: 1px solid hsl(41 91% 56% / 0.8);
+  border-radius: 999px;
+  padding: 0.26rem 0.55rem;
+  color: hsl(41 91% 56%);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 0 16px hsl(41 91% 56% / 0.38);
+}
+.registration-event-card {
+  position: relative;
+  background: linear-gradient(90deg, hsl(41 91% 56% / 0.1), transparent 68%);
+  box-shadow: inset 3px 0 0 hsl(41 91% 56%), 0 0 30px hsl(41 91% 56% / 0.16);
+}
+.events-roll-viewport {
+  display: block;
+  height: 1.25rem;
+  min-width: 0;
+  overflow: hidden;
+  perspective: 300px;
+}
+.events-roll-track {
+  display: grid;
+  grid-auto-rows: 1.25rem;
+  transform-origin: center top;
+  animation: events-roll 7.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+.events-roll-card {
+  display: block;
+  color: hsl(208 52% 6%);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+  text-align: center;
+  white-space: nowrap;
+}
+a.event-directory-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -28px hsl(196 82% 42% / 0.9);
+}
+
+@keyframes events-roll {
+  0%, 42% { transform: translateY(0) rotateX(0deg); }
+  43%, 56% { transform: translateY(-1.25rem) rotateX(5deg); }
+  57%, 70% { transform: translateY(-2.5rem) rotateX(-5deg); }
+  71%, 84% { transform: translateY(-3.75rem) rotateX(5deg); }
+  85%, 100% { transform: translateY(-5rem) rotateX(0deg); }
+}
+@keyframes event-cta-glow {
+  0%, 40%, 100% { box-shadow: 0 0 0 1px hsl(41 91% 56% / 0.45), 0 0 18px hsl(41 91% 56% / 0.35); }
+  48%, 84% { box-shadow: 0 0 0 1px hsl(41 91% 56% / 0.8), 0 0 34px hsl(41 91% 56% / 0.7); }
+  92%, 96% { box-shadow: 0 0 0 2px hsl(41 91% 56% / 0.95), 0 0 64px hsl(41 91% 56% / 0.95), 0 0 104px hsl(41 91% 56% / 0.58); }
+}
+@keyframes event-cta-shine {
+  0%, 87% { opacity: 0; transform: translateX(-220%) skewX(-18deg); }
+  90% { opacity: 0.45; }
+  95% { opacity: 0.75; transform: translateX(440%) skewX(-18deg); }
+  100% { opacity: 0; transform: translateX(440%) skewX(-18deg); }
+}
+@keyframes registration-marquee {
+  0%, 12% { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes attention-beacon {
+  0%, 100% { box-shadow: 0 0 0 1px hsl(196 82% 58% / 0.4), 0 0 18px hsl(196 82% 58% / 0.45); }
+  50% { box-shadow: 0 0 0 1px hsl(41 91% 56% / 0.7), 0 0 28px hsl(196 82% 58% / 0.85), 0 0 52px hsl(41 91% 56% / 0.38); }
+}
+@keyframes attention-shine {
+  0%, 64% { opacity: 0; transform: translateX(-220%) skewX(-18deg); }
+  70% { opacity: 0.35; }
+  84% { opacity: 0.7; transform: translateX(440%) skewX(-18deg); }
+  100% { opacity: 0; transform: translateX(440%) skewX(-18deg); }
 }
 
 @keyframes hero-enter {
